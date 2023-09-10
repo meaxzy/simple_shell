@@ -10,12 +10,12 @@
 
 int main(int argc, const char **argv)
 {
-	int cont = 1, err_count = 0, exit_status = 0, is_exec;
+	int active = 1, err_count = 0, exit_status = 0, is_exec;
 	char **command;
 
-	while (cont)
+	while (active)
 	{
-		command = fetch_cmd(&cont);
+		command = fetch_cmd(&active);
 		if (command != NULL)
 		{
 			if (strcmp(command[0], "exit") == 0)
