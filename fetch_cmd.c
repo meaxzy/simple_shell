@@ -1,45 +1,49 @@
-#include “shell.h”
+#include "shell.h"
 
-char **fetch_cmd(int *active) {
-    char *input = NULL;
-    size_t input_size = 0;
-    ssize_t bytes_read;
+/**
+ * fetch_command - Reads and processes a command input from the user.
+ *
+ * @sh: Pointer to control the shell's operations (switch on/off)
+ *
+ * Return: An array of pointers representing command tokens,
+ * or NULL if there's an issue.
+ */
+char **fetch_command(int *sh) {
+    char **command = NULL;
+    char *line = NULL;
+    size_t size = 0;
+    ssize_t read;
 
-   
-    printf("$ ");
-    bytes_read = getline(&input, &input_size, stdin);
+    if (isatty(STDIN_FILENO)) {
+        printf("$ ");
+        fflush(stdout); // Ensure the prompt is displayed immediately.
+    }
 
-    if (bytes_read == -1 || feof(stdin)) {
-        free(input);
-        *active = 0;
+    read = getline(&line, &size, stdin);
 
+    if (read == -1) {
+        if (isatty(STDIN_FILENO)) {
+            printf("\n");
+            fflush(stdout); // Ensure a newline is displayed after input.
+        }
+        free(line);
+        *sh = 0;
         return NULL;
     }
 
-    input[bytes_read - 1] = '\0';
-
-    char **command = NULL;
-    char *token = strtok(input, " ");
-    int token_count = 0;
-
-    while (token != NULL) {
-        command = realloc(command, (token_count + 1) * sizeof(char *));
-        if (command == NULL) {
-            perror("realloc");
-            exit(1);
-        }
-        command[token_count] = strdup(token);
-        token = strtok(NULL, " ");
-        token_count++;
+    // Remove trailing newline character, if present.
+    if (line[read - 1] == '\n') {
+        line[read - 1] = '\0';
     }
 
-    command = realloc(command, (token_count + 1) * sizeof(char *));
-    if (command == NULL) {
-        perror("realloc");
-        exit(1);
+    // Check for empty input.
+    if (strlen(line) == 0) {
+        free(line);
+        return NULL;
     }
-    command[token_count] = NULL;
 
-    free(input);
+    // Tokenize the line into command arguments.
+    command = tokenizef(line);
+
     return command;
 }
