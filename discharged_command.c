@@ -1,24 +1,23 @@
 #include "main.h"
 
 /**
- * free_command - Deallocates memory for an array of command tokens.
+ * free_command - Frees memory associated with a command array.
  *
- * This function is responsible for releasing the memory allocated for
+ * @command: Pointer to the array of command tokens to be freed.
  * an array of command tokens. It takes a pointer to the array as its
  * argument and frees each individual token and the array itself.
- *
- * @command: Pointer to the array of command tokens to be deallocated.
  */
-void free_command(char **command)
+
+void discharged_command(char **command)
 {
-    int i = 0;
+	int i = 0;
 
-    if (command[i] != NULL)
-    {
-        free(command[i]);
-        i++;
-    }
+	if (command[i] != NULL)
+	{
+	free(command[i]);
+	i++;
+	}
 
-    free(command[i]);
-    free(command);
+	free(command[i]);
+	free(command);
 }

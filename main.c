@@ -1,48 +1,86 @@
-#include "shell.h"
+#include "main.h"
+
 
 /**
- * main - Entry point
+ * main - the initialization of the main function, command entry..
  *
- * @argc: argument count
- * @argv: argument array (constant)
- * Return: Always 0; success as 1
+ * @ac: number of arguments.
+ * @av: array of arguments.
+ *
+ * Return: Exit_point (0) for success.
  */
-
-int main(int argc, const char **argv)
+int main(int ac, char **av)
 {
-	int active = 1, err_count = 0, exit_status = 0, is_exec;
-	char **command;
+	int entry_point = 1, errors = 0, exit_point = 0, isexec;
+	char **command = NULL;
+	ac = ac;
 
-	while (active)
+	while (entry_point)
 	{
-		command = fetch_cmd(&active);
+		command = incoming_command(&entry_point);
 		if (command != NULL)
 		{
 			if (strcmp(command[0], "exit") == 0)
 			{
-				free_cmd(command);
+				discharged_command(command);
 				break;
 			}
 			if (strcmp(command[0], "env") == 0)
 			{
-				print_env();
-				exit_status = 0;
-				free_cmd(command);
+				print_envf();
+				exit_point = 0;
+				discharged_command(command);
 				continue;
 			}
-			is_exec = is_exec(&command[0]);
-			if (is_exec == 0)
+			if (strcmp(command[0], "setenv") == 0)
 			{
-				err_count++;
-				fprintf(stderr, "%s: %d: %s: NOT FOUND\n", argv[0], err_count, command[0]);
+				if (command[1] != NULL && command[2] != NULL)
+				{
+					if (setenv_command(command[1], command[2]) != 0)
+					{
+						fprintf(stderr, "%s: %d: Error setting environment variable\n", av[0], errors);
+						exit_point = 1;
+					}
+				}
+				else
+				{
+					fprintf(stderr, "%s: %d: Usage: setenv VARIABLE VALUE\n", av[0], errors);
+					exit_point = 1;
+				}
+				discharged_command(command);
 				continue;
 			}
-			else if (is_exec == 1)
+			if (strcmp(command[0], "unsetenv") == 0)
 			{
-				find_Path(&command[0]);
+				if (command[1] != NULL)
+				{
+					if (unsetenv_command(command[1]) != 0)
+					{
+						fprintf(stderr, "%s: %d: Error unsetting environment variable\n", av[0], errors);
+						exit_point = 1;
+					}
+				}
+				else
+				{
+					fprintf(stderr, "%s: %d: Usage: unsetenv VARIABLE\n", av[0], errors);
+					exit_point = 1;
+				}
+				discharged_command(command);
+				continue;
 			}
-			exec_cmd(command, err_count, exit_status);
+			isexec = isexec_f(&command[0]);
+			if (isexec == 0)
+			{
+				(errors)++;
+				fprintf(stderr, "%s: %d: %s: not found\n", av[0], errors, command[0]);
+				exit_point = 127;
+				discharged_command(command);
+				continue;
+			}
+			else if (isexec == 1)
+				find_pathf(&command[0]);
+			exec_command(command, &errors, &exit_point);
 		}
 	}
-	return (exit_status);
+	return (exit_point);
 }

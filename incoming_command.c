@@ -10,39 +10,35 @@
  *
  * @param sh: Pointer to control the shell's operations (switch on/off).
  *
- * Return: An array of pointers representing command tokens, or NULL if there's an issue.
+ * Return: A pointer array for command tokens, or NULL on issues..
  */
-char **fetch_and_process_command(int *sh)
+
+charchar **incoming_command(int *sh)(int *sh)
 {
-    char **command = NULL;
-    char *line = NULL;
-    size_t size = 0;
-    ssize_t read;
+	char **command = NULL;
+	char *line = NULL;
+	size_t size = 0;
+	ssize_t read;
 
-    if (isatty(STDIN_FILENO))
-    {
-        printf("$ ");
-    }
-
-    read = getline(&line, &size, stdin);
-
-    if (feof(stdin))
-    {
-        if (isatty(STDIN_FILENO))
-            printf("\n");
-        free(line);
-        *sh = 0;
-        return (NULL);
-    }
-
-    strip_whitespace(line);
-
-    if (strlen(line) == 0 || read == -1)
-    {
-        free(line);
-        return (NULL);
-    }
-
-    command = tokenize_line(&line);
-    return (command);
+	if (isatty(STDIN_FILENO))
+	{
+	printf("$ ");
+	}
+	read = getline(&line, &size, stdin);
+	if (feof(stdin))
+	{
+		if (isatty(STDIN_FILENO))
+			printf("\n");
+		free(line);
+		*sh = 0;
+		return (NULL);
+	}
+	stripf(line);
+	if (strlen(line) == 0 || read == -1)
+	{
+		free(line);
+		return (NULL);
+	}
+	command = tokenize_f(&line);
+	return (command);
 }

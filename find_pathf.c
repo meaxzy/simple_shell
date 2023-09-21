@@ -1,47 +1,36 @@
 #include "main.h"
 
 /**
- * execute_command - Executes a command and handles process status.
- *
- * This function takes a command as input, forks a child process to execute
- * the command, and then waits for the child process to complete. It also
- * handles error conditions and updates the number of errors and the shell's
- * exit code accordingly.
- *
- * @param command: Pointer to a NULL-terminated array of command tokens.
- * @param errs: Pointer to the number of errors that occurred.
- * @param exit_code: Pointer to the shell's exit code.
- */
-void execute_command(char **command, int *errs, int *exit_code)
-{
-    pid_t pid;
-    int status;
-    pid = fork();
-    if (pid == -1)
-    {
-        perror("Fork failed");
-        return;
-    }
+* findExecutablePath - Locates the full
+* path of an executable command
+* by searching through directories listed in the PATH environment variable.
+*
+* @cmdName: Pointer to the command to be executed; will be updated with
+* the full path if found.
+*/
 
-    if (pid == 0)
-    {
-        if (execve(command[0], command, environ) == -1)
-        {
-            (*errs)++;
-            perror("Execve failed");
-        }
-        free_command(command);
-    }
-    else
-    {
-        wait(&status);
-        if (WIFEXITED(status))
-            *exit_code = WEXITSTATUS(status);
-        else if (WIFSIGNALED(status))
-        {
-            fprintf(stderr, "Child process killed by signal: %d\n", WTERMSIG(status));
-            *exit_code = WTERMSIG(status);
-        }
-        free_command(command);
-    }
+void findExecutablePath(char **cmdName)
+{
+	char *path = getenv("PATH");
+	char *pathcp = strdup(path);
+	char *token = strtok(pathcp, ":");
+	char *try_path = NULL;
+
+	while (token != NULL)
+	{
+	try_path = malloc(strlen(*cmdName) + strlen(token) + 2);
+	sprintf(try_path, "%s/%s", token, *cmdName);
+
+	if (access(try_path, X_OK) == 0)
+	{
+	free(*cmdName);
+	*cmdName = strdup(try_path);
+	free(try_path);
+	break;
+	}
+	free(try_path);
+	token = strtok(NULL, ":");
+	}
+
+	free(pathcp);
 }
