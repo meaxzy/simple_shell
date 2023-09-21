@@ -15,12 +15,13 @@ extern char **environ;
 int setenv_command(char *variable, char *value);
 int unsetenv_command(char *variable);
 char **incoming_command(int *sh);
-void stripf(char *line);
+void stripWhitespace(char *line);
 char **tokenize_f(char **line);
 int isexec_f(char **cmdname);
 void find_pathf(char **cmdname);
 void print_envf(void);
 void exec_command(char **command, int *errs, int *exit_point);
 void discharged_command(char **command);
+void findExecutablePath(char **cmdName);
 
 #endif /*_MAIN_H_*/

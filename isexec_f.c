@@ -1,15 +1,15 @@
 #include "main.h"
 
 /**
-* isExecutable - Checks if a command is executable or in the PATH.
+* isexec_f - Checks if a command is executable or in the PATH.
 *
-* @cmdName: Pointer to the first token of the command.
+* @cmdname: Pointer to the first token of the command.
 * Return: 0 if not executable,
 *         1 if executable is found in the PATH,
 *         2 if the full executable pathname was provided.
 */
 
-int int isexec_f(char **cmdname)
+int isexec_f(char **cmdname)
 {
 	char *path = getenv("PATH");
 	char *pathCopy = NULL;

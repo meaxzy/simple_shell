@@ -8,44 +8,39 @@
  */
 void stripWhitespace(char *line)
 {
-    if (line == NULL)
-        return;
+	size_t length = strlen(line);
+	size_t start = 0;
+	size_t end = length - 1;
+	size_t i, j;
+	int insideToken = 0;
 
-    int length = strlen(line);
-    int start = 0;
-    int end = length - 1;
-    int i, j;
-    int insideToken = 0;
+	if (line == NULL)
+                return;
 
-    // Remove leading whitespaces
-    while (isspace(line[start]))
-        start++;
+	while (isspace(line[start]))
+		start++;
 
-    // Remove trailing whitespaces
-    while (end >= start && isspace(line[end]))
-        end--;
+	while (end >= start && isspace(line[end]))
+		end--;
 
-    // Remove multiple spaces between tokens
-    for (i = start, j = start; i <= end; i++)
-    {
-        if (isspace(line[i]))
-        {
-            if (!insideToken)
-            {
-                line[j++] = ' ';
-                insideToken = 1;
-            }
-        }
-        else
-        {
-            line[j++] = line[i];
-            insideToken = 0;
-        }
-    }
+	for (i = start, j = start; i <= end; i++)
+	{
+		if (isspace(line[i]))
+		{
+			if (!insideToken)
+			{
+				line[j++] = ' ';
+				insideToken = 1;
+			}
+		}
+		else
+		{
+			line[j++] = line[i];
+			insideToken = 0;
+		}
+	}
 
-    // Null-terminate the stripped string
-    line[j] = '\0';
+	line[j] = '\0';
 
-    // Shift the stripped content to the beginning of the string
-    memmove(line, line + start, j - start + 1);
+	memmove(line, line + start, j - start + 1);
 }

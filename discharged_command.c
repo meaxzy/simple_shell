@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * free_command - Frees memory associated with a command array.
+ * discharged_command - Frees memory associated with a command array.
  *
  * @command: Pointer to the array of command tokens to be freed.
  * an array of command tokens. It takes a pointer to the array as its
@@ -14,10 +14,9 @@ void discharged_command(char **command)
 
 	if (command[i] != NULL)
 	{
-	free(command[i]);
-	i++;
+		free(command[i]);
+		i++;
 	}
-
 	free(command[i]);
 	free(command);
 }

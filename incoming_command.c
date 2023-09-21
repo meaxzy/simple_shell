@@ -1,19 +1,19 @@
 #include "main.h"
 
 /**
- * fetch_and_process_command - Reads and processes a user-input command.
+ * incoming_command - Reads and processes a user-input command.
  *
  * This function reads a command input from the user, processes it, and
  * returns an array of pointers representing command tokens. It also handles
  * special cases like the end of input or empty commands. If the shell's
  * interactive mode is enabled, it prompts the user with "$ ".
  *
- * @param sh: Pointer to control the shell's operations (switch on/off).
+ * @sh: Pointer to control the shell's operations (switch on/off).
  *
  * Return: A pointer array for command tokens, or NULL on issues..
  */
 
-charchar **incoming_command(int *sh)(int *sh)
+char **incoming_command(int *sh)
 {
 	char **command = NULL;
 	char *line = NULL;
@@ -33,7 +33,7 @@ charchar **incoming_command(int *sh)(int *sh)
 		*sh = 0;
 		return (NULL);
 	}
-	stripf(line);
+	stripWhitespace(line);
 	if (strlen(line) == 0 || read == -1)
 	{
 		free(line);

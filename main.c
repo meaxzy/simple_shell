@@ -13,6 +13,7 @@ int main(int ac, char **av)
 {
 	int entry_point = 1, errors = 0, exit_point = 0, isexec;
 	char **command = NULL;
+
 	ac = ac;
 
 	while (entry_point)
@@ -38,7 +39,7 @@ int main(int ac, char **av)
 				{
 					if (setenv_command(command[1], command[2]) != 0)
 					{
-						fprintf(stderr, "%s: %d: Error setting environment variable\n", av[0], errors);
+						fprintf(stderr, "%s: %d: Error setting env variable\n", av[0], errors);
 						exit_point = 1;
 					}
 				}
@@ -56,7 +57,7 @@ int main(int ac, char **av)
 				{
 					if (unsetenv_command(command[1]) != 0)
 					{
-						fprintf(stderr, "%s: %d: Error unsetting environment variable\n", av[0], errors);
+						fprintf(stderr, "%s: %d: Error unsetting variable\n", av[0], errors);
 						exit_point = 1;
 					}
 				}
@@ -78,7 +79,7 @@ int main(int ac, char **av)
 				continue;
 			}
 			else if (isexec == 1)
-				find_pathf(&command[0]);
+				findExecutablePath(&command[0]);
 			exec_command(command, &errors, &exit_point);
 		}
 	}
